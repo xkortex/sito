@@ -22,7 +22,6 @@ exclude = '''
 '''
 
 [build-system]
-requires = [
-    "setuptools>=30.3.0,<50",
-    "wheel",
-]
+requires = ["setuptools>=30.3.0", "wheel", "setuptools_scm"]
+
+[tool.setuptools_scm]

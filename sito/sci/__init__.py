@@ -4,6 +4,7 @@ __version__ = "0+unknown"
 
 try:
     __version__ = get_distribution(__name__).version
+    print("pkg_resources")
 except (DistributionNotFound, NameError) as exc:
     # package is not installed
-    from sito._version import __version__
+    from sito import __version__
