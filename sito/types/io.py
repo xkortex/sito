@@ -33,24 +33,24 @@ def path_encoder(obj: Path):
 @dataclass_json
 @dataclass(frozen=True)
 class Checksum(object):
-    __slots__ = ["hex", "name"]
+    __slots__ = ["bytes", "name"]
 
-    hex: str
+    bytes: bytes
     name: str
 
     def __str__(self):
-        return self.name + ":" + self.hex
+        return self.name + ":" + self.bytes.hex()
 
     @classmethod
     def parse(cls, cs: str):
         name, hexv = cs.split(":")
-        return cls(hex=hexv, name=name)
+        return cls(bytes=bytes.fromhex(hexv), name=name)
 
     @classmethod
     def from_data(cls, data, name="blake3"):
         kwargs = {"multithreading": True} if name == "blake3" else {}
         hasher = get_hasher(name, data, **kwargs)
-        return cls(hex=hasher.hexdigest(), name=hasher.name)
+        return cls(bytes=hasher.digest(), name=hasher.name)
 
     @classmethod
     def from_path(cls, path: Union[Path, str, os.PathLike]):
@@ -69,4 +69,26 @@ class FilePointer(object):
     #     __slots__ = ['uri', 'checksum']
 
     uri: Path = field(metadata=config(encoder=path_encoder))
+    checksum: Checksum
+
+
+@dataclass(frozen=True)
+class Checksum(object):
+    __slots__ = ["bytes", "name"]
+
+    bytes: bytes
+    name: str
+
+    def __str__(self):
+        """ Return colon-delimited string encoding, e.g.
+        'blake3:af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262'
+        """
+        return self.name + ":" + self.bytes.hex()
+
+
+@dataclass(frozen=True)
+class NameThisDataStructure(object):
+    """Represents a file or object"""
+    uri: Path = field(metadata=config(encoder=path_encoder))
+    size: int
     checksum: Checksum
