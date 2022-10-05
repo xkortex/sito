@@ -1,5 +1,5 @@
 from typing import Callable
-from sito.datatypes import SitoMinorType, SitoMajorType, SitoMinorTypeDict
+from sito.serde.datatypes import SitoMajorType, SitoMinorTypeDict
 
 _stringly_set = frozenset({str, bytes})
 _number_set = frozenset({int, float, complex})
